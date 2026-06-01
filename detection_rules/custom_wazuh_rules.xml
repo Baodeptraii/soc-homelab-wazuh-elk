@@ -1,0 +1,106 @@
+<!--
+  Custom Wazuh Detection Rules
+  MITRE ATT&CK mapped rules for SOC Home Lab
+  Deploy to: /var/ossec/etc/rules/local_rules.xml on Wazuh Manager
+
+  Rule ID range used: 100100 - 100200 (custom range)
+-->
+<group name="custom_soc_rules,">
+
+  <!-- ============================================================
+       T1053.005 - Scheduled Task / Job: Scheduled Task (Windows)
+       ============================================================ -->
+  <rule id="100100" level="10">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^4698$</field>
+    <description>MITRE T1053.005 - Scheduled Task Created: $(win.eventdata.taskName)</description>
+    <mitre>
+      <id>T1053.005</id>
+    </mitre>
+    <group>attack,persistence,</group>
+  </rule>
+
+  <!-- ============================================================
+       T1547.001 - Registry Run Key Persistence
+       ============================================================ -->
+  <rule id="100110" level="10">
+    <if_group>sysmon</if_group>
+    <field name="win.system.eventID">^13$</field>
+    <field name="win.eventdata.targetObject">CurrentVersion\\Run</field>
+    <description>MITRE T1547.001 - Registry Run Key modified for persistence</description>
+    <mitre>
+      <id>T1547.001</id>
+    </mitre>
+    <group>attack,persistence,</group>
+  </rule>
+
+  <!-- ============================================================
+       T1070.001 - Indicator Removal: Clear Windows Event Logs
+       ============================================================ -->
+  <rule id="100120" level="12">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^104$</field>
+    <description>MITRE T1070.001 - Windows Event Log cleared: $(win.eventdata.channel)</description>
+    <mitre>
+      <id>T1070.001</id>
+    </mitre>
+    <group>attack,defense_evasion,high_severity,</group>
+  </rule>
+
+  <!-- ============================================================
+       T1110.001 - SSH Brute Force (Linux)
+       ============================================================ -->
+  <rule id="100130" level="10" frequency="10" timeframe="60">
+    <if_matched_sid>5710</if_matched_sid>
+    <description>MITRE T1110.001 - SSH Brute Force: 10+ failed logins in 60s from $(srcip)</description>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+    <group>attack,credential_access,</group>
+  </rule>
+
+  <!-- ============================================================
+       T1059.001 - PowerShell Execution (suspicious flags)
+       ============================================================ -->
+  <rule id="100140" level="10">
+    <if_group>sysmon</if_group>
+    <field name="win.system.eventID">^1$</field>
+    <field name="win.eventdata.image">powershell.exe</field>
+    <field name="win.eventdata.commandLine">-EncodedCommand|-enc|-w hidden|-nop|-noni</field>
+    <description>MITRE T1059.001 - Suspicious PowerShell execution flags detected</description>
+    <mitre>
+      <id>T1059.001</id>
+    </mitre>
+    <group>attack,execution,</group>
+  </rule>
+
+  <!-- ============================================================
+       T1562.001 - Impair Defenses: Disable Windows Defender
+       ============================================================ -->
+  <rule id="100150" level="12">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^7045$|^7040$</field>
+    <field name="win.eventdata.serviceName">WinDefend|MpsSvc</field>
+    <description>MITRE T1562.001 - Security service stopped or modified: $(win.eventdata.serviceName)</description>
+    <mitre>
+      <id>T1562.001</id>
+    </mitre>
+    <group>attack,defense_evasion,high_severity,</group>
+  </rule>
+
+  <!-- ============================================================
+       T1078 - Valid Accounts: After-hours login alert
+       ============================================================ -->
+  <rule id="100160" level="8">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">^4624$</field>
+    <field name="win.eventdata.logonType">^10$</field>
+    <time>18:00 - 07:00</time>
+    <description>MITRE T1078 - After-hours remote interactive login by $(win.eventdata.targetUserName)</description>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
+    <group>attack,initial_access,</group>
+  </rule>
+
+</group>
