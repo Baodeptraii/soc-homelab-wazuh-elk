@@ -90,19 +90,6 @@ Queried Elasticsearch with KQL, correlated multi-source events, and tuned rules 
 
 ---
 
-## ⚔️ Simulated Attack Scenarios
-
-| Technique | MITRE ATT&CK ID | Detection Method |
-|---|---|---|
-| Unauthorized Scheduled Task | T1053.005 | Sysmon Event ID 1 + Wazuh custom rule |
-| Registry Run Key Persistence | T1547.001 | Sysmon Event ID 13 |
-| Port Scan (Nmap) | T1595 | Suricata ET SCAN ruleset |
-| SSH Brute Force | T1110.001 | Wazuh built-in + custom threshold rule |
-| Event Log Clearing | T1070.001 | Sysmon Event ID 104 |
-| Security Tool Tampering | T1562.001 | Wazuh FIM + process monitoring |
-
----
-
 ## 📁 Repository Structure
 
 ```
@@ -120,11 +107,6 @@ soc-homelab-wazuh-elk/
 │   └── 📄 auto_attack_gen.py        # Python wrapper for Atomic Red Team
 │
 ├── 📂 screenshots/
-│   ├── 📄 01_kibana_overview_dashboard.png
-│   ├── 📄 02_wazuh_active_alert_privilege_escalation.png
-│   ├── 📄 03_suricata_port_scan_alert.png
-│   ├── 📄 04_sysmon_log_scheduled_task.png
-│   └── 📄 05_elk_event_correlation.png
 │
 └── 📄 README.md
 ```
@@ -133,44 +115,27 @@ soc-homelab-wazuh-elk/
 
 ## 📸 Dashboards & Detection Showcase
 
-### Kibana Overview Dashboard
-> *Tổng quan toàn bộ log ingestion và alert trong 24h — Windows events, Linux syslog, Suricata alerts*
+### Atomic Red Team run test 
 
-![Kibana Overview Dashboard](screenshots/01_kibana_overview_dashboard.png)
+<img width="1010" height="1012" alt="image" src="https://github.com/user-attachments/assets/5462772d-a8c8-433a-860a-f21b41aa7b57" />
 
----
+### Wazuh Overview Dashboard
 
-### Wazuh Active Alert — Privilege Escalation Detected
-> *Script Python chạy Atomic Red Team kích hoạt rule T1053 — alert level 12 bật lên trên Wazuh Manager*
+<img width="1624" height="963" alt="image" src="https://github.com/user-attachments/assets/bed4b5ce-09f6-4192-a2c9-cefc06e60e1b" />
 
-![Wazuh Active Alert](screenshots/02_wazuh_active_alert_privilege_escalation.png)
+<img width="1650" height="779" alt="image" src="https://github.com/user-attachments/assets/4345a532-37b2-4533-8449-a7e6c3143302" />
 
----
+### Sysmon Alert
 
-### Suricata — Port Scan Detection
-> *Suricata bắt được port scan từ Kali Linux, EVE.json được đẩy về Wazuh và hiển thị trên Kibana*
+<img width="1635" height="737" alt="image" src="https://github.com/user-attachments/assets/e98cfaf6-865e-4d8e-8cb8-25fe51fcc1f3" />
 
-![Suricata Port Scan](screenshots/03_suricata_port_scan_alert.png)
-
----
-
-### Sysmon — Suspicious Scheduled Task (Event ID 4698)
-> *Windows Event ID 4698 — Sysmon ghi nhận task tạo bởi script mô phỏng T1053.005*
-
-![Sysmon Log](screenshots/04_sysmon_log_scheduled_task.png)
-
----
-
-### ELK — Multi-source Event Correlation
-> *Tương quan sự kiện từ nhiều nguồn: timeline từ port scan → lateral movement attempt → persistence*
-
-![ELK Correlation](screenshots/05_elk_event_correlation.png)
+<img width="1650" height="926" alt="image" src="https://github.com/user-attachments/assets/d93181f6-0a31-40e6-bd17-85fe4f32ca97" />
 
 ---
 
 ## ⚙️ Quick Setup Guide
 
-> ⚠️ *This repo contains configs and scripts only. VMs are not included.*
+> ⚠️ *This repo contains my sample configs and scripts only. VMs are not included.*
 
 ### Prerequisites
 - VirtualBox or VMware
